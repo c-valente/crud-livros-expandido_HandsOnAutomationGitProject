@@ -95,9 +95,9 @@ test("Failing to Add a Book to Library - Empty Mandatory Fields (Validation Mess
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.numeroPaginasField, true);
 
   await manageBooksPage.adicionarLivroButton.click();
-  newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
-  expect(newAmountGridLivros).toBeGreaterThan(initialAmountGridLivros);
-
   const newBookCard = page.locator(`//div[@class="book-card"]//h3[contains(text(), "${newBook.nome}")]`);
-  await expect(newBookCard).toBeVisible()
+  await expect(newBookCard).toBeVisible();
+
+  newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
+  expect(newAmountGridLivros).toBeGreaterThan(initialAmountGridLivros)
 })
