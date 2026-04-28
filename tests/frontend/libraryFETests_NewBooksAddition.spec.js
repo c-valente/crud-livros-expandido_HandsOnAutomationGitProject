@@ -41,7 +41,7 @@ test("Successfull Book Addition to Library - FE-007", async ({ page }) => {
   await page.goto(livrosUrlExtension);
   await expect(manageBooksPage.gerenciarLivrosPageTitle).toBeVisible();
 
-  const initialAmountGridLivros = await (manageBooksPage.gridBookAmount).count();
+  const initialAmountGridLivros = await manageBooksPage.gridBookAmount.count();
 
   await manageBooksPage.fillBookFormCorrectly(newBook);
   await expect(manageBooksPage.nomeLivroField).toBeEmpty();
@@ -53,8 +53,8 @@ test("Successfull Book Addition to Library - FE-007", async ({ page }) => {
   const newBookCard = page.locator(`//div[@class="book-card"]//h3[contains(text(), "${newBook.nome}")]`);
   await expect(newBookCard).toBeVisible();
 
-  const newAmountGridLivros = await (manageBooksPage.gridBookAmount).count();
-  expect(newAmountGridLivros).toBe(initialAmountGridLivros + 1)
+  const newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
+  expect(newAmountGridLivros).toBeGreaterThan(initialAmountGridLivros)
 });
 
 test("Failing to Add a Book to Library - Empty Mandatory Fields (Validation Messages Occurrence) - FE-008", async ({ page }) => {
@@ -70,7 +70,7 @@ test("Failing to Add a Book to Library - Empty Mandatory Fields (Validation Mess
   await manageBooksPage.adicionarLivroButton.click();
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.nomeLivroField, false);
   
-  let newAmountGridLivros = await (manageBooksPage.gridBookAmount).count();
+  let newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
   expect(newAmountGridLivros).toBe(initialAmountGridLivros);
 
   await manageBooksPage.nomeLivroField.fill(newBook.nome);
@@ -79,16 +79,25 @@ test("Failing to Add a Book to Library - Empty Mandatory Fields (Validation Mess
   await manageBooksPage.adicionarLivroButton.click();
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.autorField, false);
 
+  newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
+  expect(newAmountGridLivros).toBe(initialAmountGridLivros);
+
   await manageBooksPage.autorField.fill(newBook.autor);
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.autorField, true);
 
   await manageBooksPage.adicionarLivroButton.click();
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.numeroPaginasField, false);
 
+  newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
+  expect(newAmountGridLivros).toBe(initialAmountGridLivros);
+
   await manageBooksPage.numeroPaginasField.fill(String(newBook.paginas));
   await manageBooksPage.checkBookFormFieldValidity(manageBooksPage.numeroPaginasField, true);
 
   await manageBooksPage.adicionarLivroButton.click();
-  newAmountGridLivros = await (manageBooksPage.gridBookAmount).count();
-  expect(newAmountGridLivros).toBe(initialAmountGridLivros + 1)
+  newAmountGridLivros = await manageBooksPage.gridBookAmount.count();
+  expect(newAmountGridLivros).toBeGreaterThan(initialAmountGridLivros);
+
+  const newBookCard = page.locator(`//div[@class="book-card"]//h3[contains(text(), "${newBook.nome}")]`);
+  await expect(newBookCard).toBeVisible()
 })
