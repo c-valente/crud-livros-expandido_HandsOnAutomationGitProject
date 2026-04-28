@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { randomInt } from 'node:crypto';
 
 // creation of a new user data with random data or not
 export function createUserData(nome = undefined, email = undefined, senha = undefined) {
@@ -32,7 +33,7 @@ export function createBookData(nome = undefined, autor = undefined, paginas = un
   };
 
   if (newBook.nome == undefined) {
-    newBook.nome = faker.book.title()
+    newBook.nome = `${faker.book.title()} ${randomInt(9999)}`
   };
   if (newBook.autor == undefined) {
     newBook.autor = faker.book.author()
